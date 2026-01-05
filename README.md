@@ -1,9 +1,15 @@
+
+
 RAG Complaint Chatbot
 
 A Retrieval-Augmented Generation (RAG) system designed to analyze and retrieve information from the Consumer Financial Protection Bureau (CFPB) complaint dataset. This project processes large-scale financial complaint data, indexes it into a vector store, and provides a semantic search interface.
 
 📂 Project Structure
-
+code
+Text
+download
+content_copy
+expand_less
 rag-complaint-chatbot/
 ├── .github/workflows/       # CI/CD for unit tests
 ├── data/
@@ -27,7 +33,7 @@ cd rag-complaint-chatbot
 pip install -r requirements.txt
 2. Data Preparation
 
-Download the CFPB Complaint Dataset.
+Download the CFPB Complaint Dataset (CSV format).
 
 Place the file in data/raw/ and rename it to complaints.csv.
 
@@ -37,70 +43,67 @@ You can run the pipeline via the Jupyter Notebook in notebooks/01_full_pipeline.
 
 Step 1: Preprocessing (Task 1)
 
-code
-Bash
-download
-content_copy
-expand_less
+
 python src/data_preprocessing.py
 
-Action: Filters data for specified products and cleans the text narratives.
+Action: Filters data for Credit Cards, Personal Loans, Savings Accounts, and Money Transfers, and cleans the text.
 
 Step 2: Indexing (Task 2)
 
 
+python src/indexing.py
 
-Action: Performs stratified sampling, chunks text, and generates the FAISS vector index.
+Action: Performs stratified sampling (15k records), chunks text, generates embeddings, and saves a FAISS index.
 
 🛠 Project Components
 Task 1: EDA & Preprocessing
 
-Objective: Cleanse and prepare raw CFPB data for embedding.
+Objective: Cleanse and prepare the raw CFPB data.
 
 Key Actions:
 
-Filtered for Credit Card, Personal Loan, Savings Account, and Money Transfers.
+Filtered for 5 specific product categories.
 
-Removed records with empty narratives.
+Removed records without narratives.
 
-Normalized text (lowercasing, special character removal, and stripping "XXXX" redactions).
+Normalized text: lowercasing, removing special characters, and stripping CFPB redaction marks (e.g., "XXXX").
 
 Output: data/processed/filtered_complaints.csv.
 
 Task 2: Embedding & Vector Store
 
-Sampling: Stratified sampling of 15,000 records to maintain proportional representation across categories.
+Sampling: Stratified sampling of 15,000 records to ensure proportional representation.
 
-Chunking: Used RecursiveCharacterTextSplitter (Size: 500, Overlap: 50).
+Chunking: RecursiveCharacterTextSplitter with a chunk size of 500 and overlap of 50.
 
 Model: sentence-transformers/all-MiniLM-L6-v2.
 
-Store: FAISS (Facebook AI Similarity Search) for local vector persistence.
+Store: FAISS (Facebook AI Similarity Search) for efficient similarity retrieval.
 
 🛰 Git & Remote Compatibility
 
-This repository uses a .gitignore file to ensure large data files and local environment files are not tracked.
+This repository is optimized for Git. However, because the raw data and vector indices can be large, the following are excluded via .gitignore:
 
-Pushing to GitHub
+data/raw/ (Huge CSV files)
 
-If you are setting this up as a new remote, use these commands:
+vector_store/ (Binary index files)
 
+__pycache__/
 
-git init
+Pushing to Remote
+
 git add .
-git commit -m "Initial commit: Completed Task 1 and Task 2"
-git branch -M main
-git remote add origin https://github.com/zemicahel/rag-complaint-chatbot.git
-git push -u origin main
+git commit -m "Complete Task 1 and 2"
+git push origin main
 🧰 Tech Stack
 
 Language: Python 3.9+
 
-Data Science: Pandas, Scikit-learn, Matplotlib
+Data: Pandas, Scikit-learn
 
-LLM Tools: LangChain, LangChain-Core
+RAG Framework: LangChain, LangChain-Core
 
-Embeddings: HuggingFace Sentence-Transformers
+Embeddings: Sentence-Transformers (HuggingFace)
 
 Vector DB: FAISS
 
@@ -110,7 +113,7 @@ Task 1: EDA and Data Preprocessing
 
 Task 2: Text Chunking, Embedding, and Indexing
 
-Task 3: RAG Retrieval Logic (In Progress)
+Task 3: RAG Retrieval Logic (Pending)
 
 Task 4: UI Development (Pending)
 
